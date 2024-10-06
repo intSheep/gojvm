@@ -13,7 +13,7 @@ import (
 
 var Version = "Version 1.0.0"
 
-func newApp() *cli.App {
+func startJVM() *cli.App {
 	return &cli.App{
 		Name:  "gojvm",
 		Usage: "A Jvm implement by Go",
@@ -75,7 +75,7 @@ func loadClass(className string, cp *classpath.Classpath) (*classfile.ClassFile,
 }
 
 func main() {
-	app := newApp()
+	app := startJVM()
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
