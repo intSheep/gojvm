@@ -52,6 +52,12 @@ func startJVM() *cli.App {
 			fmt.Printf("ClassPath:%s class:%s args:%s\n", cp, className, args)
 			newClassName := strings.Replace(className, ".", "/", -1)
 			cf, err := loadClass(newClassName, cp)
+			mainMethod := getMainMethod(cf)
+			if mainMethod != nil {
+				interpret(mainMethod)
+			} else {
+				fmt.Printf("Main method not found in class %s\n", className)
+			}
 			if err != nil {
 				return err
 			}
@@ -65,13 +71,22 @@ func startJVM() *cli.App {
 func loadClass(className string, cp *classpath.Classpath) (*classfile.ClassFile, error) {
 	classData, _, err := cp.ReadClass(className)
 	if err != nil {
-		return nil, errors.Errorf("Counld not find or load main class %s\n", className)
+		return nil, errors.Errorf("Counld not find or loads main class %s\n", className)
 	}
 	cf, err := classfile.Parse(classData)
 	if err != nil {
 		return nil, err
 	}
 	return cf, nil
+}
+
+func getMainMethod(cf *classfile.ClassFile) *classfile.MemberInfo {
+	for _, m := range cf.Methods() {
+		if m.Name() == "main" && m.Descriptor() == "([Ljava/lang/String;)V" {
+			return m
+		}
+	}
+	return nil
 }
 
 func main() {
