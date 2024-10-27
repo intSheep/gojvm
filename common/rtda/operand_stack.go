@@ -2,6 +2,8 @@ package rtda
 
 import "math"
 
+// OperandStack 操作数栈
+// 用于存储字节码指令操作的数据和中间结果
 type OperandStack struct {
 	size  uint
 	slots []Slot
@@ -71,4 +73,14 @@ func (o *OperandStack) PopRef() *Object {
 	ref := o.slots[o.size].ref
 	o.slots[o.size].ref = nil
 	return ref
+}
+
+func (o *OperandStack) PushSlot(slot Slot) {
+	o.slots[o.size] = slot
+	o.size++
+}
+
+func (o *OperandStack) PopSlot() Slot {
+	o.size--
+	return o.slots[o.size]
 }

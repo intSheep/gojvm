@@ -2,6 +2,8 @@ package rtda
 
 import "math"
 
+// LocalVars 局部变量表
+// 用于存储方法执行过程中的局部变量（包括方法参数）
 type LocalVars []Slot
 
 func newLocalVars(maxLocals uint) LocalVars {
