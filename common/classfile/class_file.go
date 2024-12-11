@@ -3,6 +3,7 @@ package classfile
 import (
 	"bytes"
 	"fmt"
+	"github.com/sirupsen/logrus"
 )
 
 type ClassFile struct {
@@ -60,12 +61,9 @@ func (cf *ClassFile) readAndCheckVersion(cr *ClassReader) {
 		if cf.minorVersion == 0 {
 			return
 		}
-	case 61: //暂时使用，因为没低版本的javac
-		if cf.minorVersion == 0 {
-			return
-		}
+	default:
+		logrus.Infof("java version :%v , maybe not support", cf.majorVersion)
 	}
-	panic("java.lang.UnsupportedClassVersionError!")
 }
 
 func (cf *ClassFile) readConstantPool(cr *ClassReader) {

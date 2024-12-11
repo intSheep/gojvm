@@ -6,6 +6,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"gojvm/common/classfile"
 	"gojvm/common/classpath"
+	"gojvm/common/rtda/heap"
 	"log"
 	"os"
 	"strings"
@@ -50,19 +51,17 @@ func startJVM() *cli.App {
 			args := c.Args().Tail()
 			cp := classpath.Parse(xjrePath, classPath)
 			fmt.Printf("ClassPath:%s class:%s args:%s\n", cp, className, args)
-			newClassName := strings.Replace(className, ".", "/", -1)
-			cf, err := loadClass(newClassName, cp)
-			mainMethod := getMainMethod(cf)
+
+			cn := strings.Replace(className, ".", "/", -1)
+			classLoader := heap.NewClassLoader(cp)
+			mainClass := classLoader.LoadClass(cn)
+			mainMethod := mainClass.GetMainMethod()
 			if mainMethod != nil {
 				interpret(mainMethod)
 			} else {
 				fmt.Printf("Main method not found in class %s\n", className)
 			}
-			if err != nil {
-				return err
-			}
 			fmt.Println("===============================================================================")
-			cf.Show()
 			return nil
 		},
 	}
@@ -80,7 +79,7 @@ func loadClass(className string, cp *classpath.Classpath) (*classfile.ClassFile,
 	return cf, nil
 }
 
-func getMainMethod(cf *classfile.ClassFile) *classfile.MemberInfo {
+func getMainMethod(cf *classfile.ClassFile) *heap.Method {
 	for _, m := range cf.Methods() {
 		if m.Name() == "main" && m.Descriptor() == "([Ljava/lang/String;)V" {
 			return m

@@ -2,6 +2,7 @@ package rtda
 
 import (
 	"github.com/stretchr/testify/assert"
+	"gojvm/common/rtda/heap"
 	"testing"
 )
 
@@ -17,7 +18,7 @@ func TestLocalVars(t *testing.T) {
 		{4, "long", int64(-2997924580)},
 		{6, "float", float32(3.1415926)},
 		{7, "double", 2.7182818654645},
-		{9, "ref", &Object{}},
+		{9, "ref", &heap.Object{}},
 	}
 	lvs := newLocalVars(10)
 	for _, test := range tests {
@@ -38,8 +39,8 @@ func setLocalVarsValue(lvs LocalVars, index uint, val any) {
 		lvs.SetFloat(index, val.(float32))
 	case float64:
 		lvs.SetDouble(index, val.(float64))
-	case *Object:
-		lvs.SetRef(index, val.(*Object))
+	case *heap.Object:
+		lvs.SetRef(index, val.(*heap.Object))
 	default:
 		panic("Illegal value")
 	}

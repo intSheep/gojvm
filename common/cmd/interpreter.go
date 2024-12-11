@@ -3,24 +3,19 @@ package main
 import (
 	"fmt"
 	"github.com/sirupsen/logrus"
-	"gojvm/common/classfile"
 	"gojvm/common/instructions"
 	"gojvm/common/instructions/base"
 	"gojvm/common/rtda"
+	"gojvm/common/rtda/heap"
 )
 
-func interpret(methodInfo *classfile.MemberInfo) {
-	// 从codeAttribute获取运行所需最大栈深度、局部变量所需执行空间
-	codeAttr := methodInfo.CodeAttribute()
-	maxLocals := codeAttr.MaxLocals()
-	maxStack := codeAttr.MaxStack()
-	bytecode := codeAttr.Code()
+func interpret(method *heap.Method) {
 	thread := rtda.NewThread()
-	frame := thread.NewFrame(maxLocals, maxStack)
+	frame := thread.NewFrame(method)
 	thread.PushFrame(frame)
 
 	defer catchErr(frame)
-	loop(thread, bytecode)
+	loop(thread, method.Code())
 }
 
 func catchErr(frame *rtda.Frame) {

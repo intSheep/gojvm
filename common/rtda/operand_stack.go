@@ -1,6 +1,9 @@
 package rtda
 
-import "math"
+import (
+	"gojvm/common/rtda/heap"
+	"math"
+)
 
 // OperandStack 操作数栈
 // 用于存储字节码指令操作的数据和中间结果
@@ -63,12 +66,12 @@ func (o *OperandStack) PopDouble() float64 {
 	return math.Float64frombits(bits)
 }
 
-func (o *OperandStack) PushRef(ref *Object) {
+func (o *OperandStack) PushRef(ref *heap.Object) {
 	o.slots[o.size].ref = ref
 	o.size++
 }
 
-func (o *OperandStack) PopRef() *Object {
+func (o *OperandStack) PopRef() *heap.Object {
 	o.size--
 	ref := o.slots[o.size].ref
 	o.slots[o.size].ref = nil

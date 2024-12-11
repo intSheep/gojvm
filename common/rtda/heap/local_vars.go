@@ -1,9 +1,6 @@
-package rtda
+package heap
 
-import (
-	"gojvm/common/rtda/heap"
-	"math"
-)
+import "math"
 
 // LocalVars 局部变量表
 // 用于存储方法执行过程中的局部变量（包括方法参数）
@@ -55,10 +52,10 @@ func (l LocalVars) GetDouble(index uint) float64 {
 	return math.Float64frombits(bits)
 }
 
-func (l LocalVars) SetRef(index uint, ref *heap.Object) {
+func (l LocalVars) SetRef(index uint, ref *Object) {
 	l[index].ref = ref
 }
 
-func (l LocalVars) GetRef(index uint) *heap.Object {
+func (l LocalVars) GetRef(index uint) *Object {
 	return l[index].ref
 }
