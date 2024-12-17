@@ -6,12 +6,12 @@ import (
 	"gojvm/common/rtda/heap"
 )
 
-type New struct {
+type NEW struct {
 	base.Index16Instruction
 }
 
 // Execute 实例化一个类
-func (n *New) Execute(frame *rtda.Frame) {
+func (n *NEW) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
 	classRef := cp.GetConstant(n.Index).(*heap.ClassRef)
 	class := classRef.ResolvedClass()

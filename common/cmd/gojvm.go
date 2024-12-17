@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
-	"gojvm/common/classfile"
 	"gojvm/common/classpath"
 	"gojvm/common/rtda/heap"
 	"log"
@@ -65,27 +63,6 @@ func startJVM() *cli.App {
 			return nil
 		},
 	}
-}
-
-func loadClass(className string, cp *classpath.Classpath) (*classfile.ClassFile, error) {
-	classData, _, err := cp.ReadClass(className)
-	if err != nil {
-		return nil, errors.Errorf("Counld not find or loads main class %s\n", className)
-	}
-	cf, err := classfile.Parse(classData)
-	if err != nil {
-		return nil, err
-	}
-	return cf, nil
-}
-
-func getMainMethod(cf *classfile.ClassFile) *heap.Method {
-	for _, m := range cf.Methods() {
-		if m.Name() == "main" && m.Descriptor() == "([Ljava/lang/String;)V" {
-			return m
-		}
-	}
-	return nil
 }
 
 func main() {

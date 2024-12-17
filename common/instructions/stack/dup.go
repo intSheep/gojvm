@@ -5,6 +5,7 @@ import (
 	"gojvm/common/rtda"
 )
 
+// DUP 复制操作数栈顶的值
 type DUP struct {
 	base.NoOperandsInstruction
 }

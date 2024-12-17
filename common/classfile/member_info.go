@@ -1,7 +1,5 @@
 package classfile
 
-import "gojvm/common/rtda/heap"
-
 type MemberInfo struct {
 	cp              ConstantPool
 	accessFlags     uint16
@@ -52,10 +50,6 @@ func (m *MemberInfo) CodeAttribute() *CodeAttribute {
 		}
 	}
 	return nil
-}
-
-func (m *MemberInfo) GetMethod() *heap.Method {
-	return &heap.Method{}
 }
 
 func (m *MemberInfo) ConstantValueAttribute() *ConstantValueAttribute {

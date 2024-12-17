@@ -16,9 +16,8 @@ type ConstantPool struct {
 }
 
 func newConstantPool(class *Class, cfCp classfile.ConstantPool) *ConstantPool {
-	constants := make([]Constant, len(cfCp))
 	consts := make([]Constant, len(cfCp))
-	rtCp := &ConstantPool{class, constants}
+	rtCp := &ConstantPool{class, consts}
 	for i := 1; i < len(cfCp); i++ {
 		cpInfo := cfCp[i]
 		switch inst := cpInfo.(type) {
@@ -45,7 +44,7 @@ func newConstantPool(class *Class, cfCp classfile.ConstantPool) *ConstantPool {
 		default:
 		}
 	}
-	return nil
+	return rtCp
 }
 
 func (cp *ConstantPool) GetConstant(index uint) Constant {

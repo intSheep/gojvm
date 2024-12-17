@@ -5,6 +5,7 @@ import (
 	"gojvm/common/rtda"
 )
 
+// ISTORE 用于将一个整数（int 类型）从操作数栈存储到局部变量表中的一个变量槽中
 type ISTORE struct {
 	base.Index8Instruction
 }

@@ -71,3 +71,11 @@ func (f *Field) IsAccessibleTo(c *Class) bool {
 	}
 	return d == c
 }
+
+func (f *Field) ConstantValueIndex() uint {
+	return f.constValueIndex
+}
+
+func (f *Field) SlotId() uint {
+	return f.slotId
+}

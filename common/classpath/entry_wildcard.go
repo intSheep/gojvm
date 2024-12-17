@@ -17,7 +17,8 @@ func newWildcardEntry(path string) CompositeEntry {
 		if info.IsDir() && path != baseDir {
 			return filepath.SkipDir
 		}
-		if strings.HasSuffix(path, ".jar") || strings.HasSuffix(path, ".JAR") {
+		ext := filepath.Ext(path)
+		if strings.HasSuffix(strings.ToLower(ext), ".jar") {
 			jarEntry := newZipEntry(path)
 			entries = append(entries, jarEntry)
 		}

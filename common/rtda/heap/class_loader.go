@@ -92,6 +92,7 @@ func verify(class *Class) {
 // 准备阶段，给类变量空间分配初始值
 func prepare(class *Class) {
 	calcInstanceFieldSlotIds(class)
+	calcStaticFieldSlotIds(class)
 	allocAndInitStaticVars(class)
 }
 
@@ -114,7 +115,7 @@ func calcInstanceFieldSlotIds(class *Class) {
 	class.instanceSlotCount = slotId
 }
 
-func calcStaticFieldsSlotIds(class *Class) {
+func calcStaticFieldSlotIds(class *Class) {
 	slotId := uint(0)
 	for _, field := range class.fields {
 		if field.IsStatic() {
@@ -127,14 +128,22 @@ func calcStaticFieldsSlotIds(class *Class) {
 	}
 	class.staticSlotCount = slotId
 }
+func allocAndInitStaticVars(class *Class) {
+	class.staticVars = newSlots(class.staticSlotCount)
+	for _, field := range class.fields {
+		if field.IsStatic() && field.IsFinal() {
+			initStaticFinalVar(class, field)
+		}
+	}
+}
 
-// allocAndInitStaticVars 为静态类变量分配空间并给予初始值
-func allocAndInitStaticVars(class *Class, field *Field) {
+func initStaticFinalVar(class *Class, field *Field) {
 	vars := class.staticVars
 	cp := class.constantPool
-	cpIndex := field.ConstValueIndex()
-	slotId := field.slotId
-	if cpIndex > 0 { // 如果cpIndex大于0，说明这个字段有常量值
+	cpIndex := field.ConstantValueIndex()
+	slotId := field.SlotId()
+
+	if cpIndex > 0 {
 		switch field.Descriptor() {
 		case "Z", "B", "C", "S", "I":
 			val := cp.GetConstant(cpIndex).(int32)

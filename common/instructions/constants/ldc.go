@@ -1,10 +1,11 @@
-package references
+package constants
 
 import (
 	"gojvm/common/instructions/base"
 	"gojvm/common/rtda"
 )
 
+// LDC load constant,用于将常量值从运行时常量池推送到操作数栈上
 type LDC struct {
 	base.Index8Instruction
 }
